@@ -31,7 +31,7 @@ uses
   NfeDuplicataVO,NfeAutorizacaoDownloadVO, Vcl.DBCtrls,
   LabeledDBCtrls,NfeDestinatarioVO,NfeFormaPagamentoVO, JvDBControls,
   JvExStdCtrls, JvCombobox, JvDBCombobox, JvExControls,
-  JvSpecialProgress, UNfeDetalheItem, uExpiraSoftware, JvDialogs, JvBaseDlg,
+  JvSpecialProgress, UNfeDetalheItem, JvDialogs, JvBaseDlg,
   JvWinDialogs, UItensDetalhados,ImportaXmlParaComponentesVisuaisController;
 
 type
@@ -339,7 +339,6 @@ type
     Configuraes1: TMenuItem;
     MostraropodevisualizodeDanfe1: TMenuItem;
     JvSpecialProgressNotasFiscais: TJvSpecialProgress;
-    ExpiraConferenciaNfe: TExpiraSoftware;
     MMenutipoCarregamentoArquivos: TMenuItem;
     PesquisaAvanada1: TMenuItem;
     ItensDetalhados1: TMenuItem;

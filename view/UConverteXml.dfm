@@ -4190,14 +4190,6 @@
       OnClick = PopupMenu11Click
     end
   end
-  object ExpiraConferenciaNfe: TExpiraSoftware
-    CodigoSistema = 333777
-    PrazoExpiracao = 365
-    DiaVencimento = 0
-    AutoExecutar = True
-    Left = 374
-    Top = 489
-  end
   object CdsNotasFiscais: TClientDataSet
     PersistDataPacket.Data = {
       590100009619E0BD01000000180000000A0000000000030000005901064E554D
