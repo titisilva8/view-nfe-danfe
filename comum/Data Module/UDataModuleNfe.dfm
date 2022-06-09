@@ -441,4 +441,30 @@ object FDataModuleNFe: TFDataModuleNFe
     Left = 56
     Top = 472
   end
+  object CdsNfeDetalheObsContribuinte: TClientDataSet
+    Aggregates = <>
+    MasterSource = DSNfeDetalhe
+    PacketRecords = 0
+    Params = <>
+    Left = 539
+    Top = 744
+  end
+  object DSNfeDetalheObsContribuinte: TDataSource
+    DataSet = CdsNfeDetalheObsContribuinte
+    Left = 715
+    Top = 744
+  end
+  object CdsNfeDetalheObsFisco: TClientDataSet
+    Aggregates = <>
+    MasterSource = DSNfeDetalhe
+    PacketRecords = 0
+    Params = <>
+    Left = 539
+    Top = 832
+  end
+  object DSNfeDetalheObsFisco: TDataSource
+    DataSet = CdsNfeDetalheObsFisco
+    Left = 715
+    Top = 832
+  end
 end

@@ -22,7 +22,7 @@
     Top = 0
     Width = 1207
     Height = 258
-    ActivePage = TsCombustivel
+    ActivePage = TSInfAdicionaisFisco
     Align = alClient
     TabOrder = 0
     object tsIpi: TTabSheet
@@ -2299,6 +2299,70 @@
         Align = alClient
         Caption = 'Em Desenvolvimento'
         TabOrder = 0
+      end
+    end
+    object TSInfAdicionaisContribuinte: TTabSheet
+      Caption = 'Inf.Ad.Contribuinte'
+      ImageIndex = 16
+      object EditObsFiscoCampo: TLabeledDBEdit
+        Left = 3
+        Top = 26
+        Width = 137
+        Height = 21
+        CharCase = ecUpperCase
+        DataField = 'CAMPO'
+        DataSource = FDataModuleNFe.DSNfeDetalheObsFisco
+        MaxLength = 20
+        TabOrder = 0
+        DBEditLabel.Width = 33
+        DBEditLabel.Height = 13
+        DBEditLabel.Caption = 'Campo'
+      end
+      object EditObsFiscoTexto: TLabeledDBEdit
+        Left = 146
+        Top = 26
+        Width = 376
+        Height = 21
+        CharCase = ecUpperCase
+        DataField = 'TEXTO'
+        DataSource = FDataModuleNFe.DSNfeDetalheObsFisco
+        MaxLength = 60
+        TabOrder = 1
+        DBEditLabel.Width = 28
+        DBEditLabel.Height = 13
+        DBEditLabel.Caption = 'Texto'
+      end
+    end
+    object TSInfAdicionaisFisco: TTabSheet
+      Caption = 'Inf.Ad.Fisco'
+      ImageIndex = 17
+      object LabeledDBEdit1: TLabeledDBEdit
+        Left = 4
+        Top = 26
+        Width = 137
+        Height = 21
+        CharCase = ecUpperCase
+        DataField = 'CAMPO'
+        DataSource = FDataModuleNFe.DSNfeDetalheObsFisco
+        MaxLength = 20
+        TabOrder = 0
+        DBEditLabel.Width = 33
+        DBEditLabel.Height = 13
+        DBEditLabel.Caption = 'Campo'
+      end
+      object LabeledDBEdit2: TLabeledDBEdit
+        Left = 147
+        Top = 26
+        Width = 376
+        Height = 21
+        CharCase = ecUpperCase
+        DataField = 'TEXTO'
+        DataSource = FDataModuleNFe.DSNfeDetalheObsFisco
+        MaxLength = 60
+        TabOrder = 1
+        DBEditLabel.Width = 28
+        DBEditLabel.Height = 13
+        DBEditLabel.Caption = 'Texto'
       end
     end
   end

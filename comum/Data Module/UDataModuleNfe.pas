@@ -74,6 +74,10 @@ type
     DSDetalheCombustivel: TDataSource;
     DSNfeDetalheMedicamento: TDataSource;
     DSNfeDetalheVeiculo: TDataSource;
+    CdsNfeDetalheObsContribuinte: TClientDataSet;
+    DSNfeDetalheObsContribuinte: TDataSource;
+    CdsNfeDetalheObsFisco: TClientDataSet;
+    DSNfeDetalheObsFisco: TDataSource;
     procedure DataModuleCreate(Sender: TObject);
 
 
@@ -123,6 +127,7 @@ uses
 
 
   NfeFormaPagamentoVO,NfeDuplicataVO,NfeFaturaVO,
+  NfeDetalheObsContribuinteVO,NfeDetalheObsFiscoVO,
 
   NfeAutorizacaoDownloadVO, PreencheDadosGlobaisController;
 
@@ -186,6 +191,8 @@ begin
   ConfiguraCds(CDSNfeExportacao,'ID_NFE_DETALHE',DSNfeDetalhe,TNfeExportacaoVO);
   ConfiguraCds(CDSNfeDetalheRastreabilidade,'ID_NFE_DETALHE',DSNfeDetalhe,TNfeDetalheRastreabilidadeVO);
   ConfiguraCds(CDSNfeDetalheImpostoIssqn,'ID_NFE_DETALHE',DSNfeDetalhe,TNfeDetalheImpostoIssqnVO);
+  ConfiguraCds(CDSNfeDetalheObsContribuinte,'ID_NFE_DETALHE',DSNfeDetalhe,TNfeDetalheObsContribuinteVO);
+  ConfiguraCds(CDSNfeDetalheObsFisco,'ID_NFE_DETALHE',DSNfeDetalhe,TNfeDetalheObsFiscoVO);
 
   ConfiguraCds(CdsNfeDetalheCombustivel,'ID_NFE_DETALHE',DSNfeDetalhe,TNfeDetEspecificoCombustivelVO);
   ConfiguraCds(CdsNfeDetalheMedicamento,'ID_NFE_DETALHE',DSNfeDetalhe,TNfeDetEspecificoMedicamentoVO);

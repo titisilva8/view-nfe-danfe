@@ -54,7 +54,9 @@ uses
   UDataModuleTransiente in 'comum\Data Module\UDataModuleTransiente.pas' {FDataModuleTransiente: TDataModule},
   UNfeDetalheItem in 'view\UNfeDetalheItem.pas' {FNfeDetalheItem},
   UItensDetalhados in 'view\UItensDetalhados.pas' {FItensDetalhados},
-  UDataModuleItensDetalhados in 'comum\Data Module\UDataModuleItensDetalhados.pas' {DataModuleItensDetalhados: TDataModule};
+  UDataModuleItensDetalhados in 'comum\Data Module\UDataModuleItensDetalhados.pas' {DataModuleItensDetalhados: TDataModule},
+  NfeDetalheObsContribuinteVO in 'model\NfeDetalheObsContribuinteVO.pas',
+  NfeDetalheObsFiscoVO in 'model\NfeDetalheObsFiscoVO.pas';
 
 {$R *.res}
 

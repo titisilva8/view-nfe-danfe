@@ -213,6 +213,12 @@ type
     EditMedicamentoDataFabricacao: TLabeledDBDateEdit;
     EditMedicamentoDataValidade: TLabeledDBDateEdit;
     EditMedicamentoPrecoMaximoConsumidor: TLabeledDBEdit;
+    TSInfAdicionaisContribuinte: TTabSheet;
+    TSInfAdicionaisFisco: TTabSheet;
+    EditObsFiscoCampo: TLabeledDBEdit;
+    EditObsFiscoTexto: TLabeledDBEdit;
+    LabeledDBEdit1: TLabeledDBEdit;
+    LabeledDBEdit2: TLabeledDBEdit;
     procedure FormCreate(Sender: TObject);
    
   private

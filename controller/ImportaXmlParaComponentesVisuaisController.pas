@@ -45,6 +45,9 @@ System.Variants, System.Classes,Vcl.Graphics, Vcl.Controls,  Vcl.Dialogs, Vcl.Me
      class procedure TagFCPDIFAL(Nfe:TAcbrNfe;FK:Integer);
      class procedure TagII(Nfe:TAcbrNfe;FK:Integer);
      class procedure TagICMS(Nfe:TAcbrNfe;FK:Integer);
+     class procedure TagObsCont(Nfe:TAcbrNfe;FK:Integer);
+     class procedure TagObsFisco(Nfe:TAcbrNfe;FK:Integer);
+
 
      {1:n}
      class procedure TagDetExport(Nfe:TAcbrNfe;FK:Integer);
@@ -714,6 +717,9 @@ begin
   TagII(Nfe,FK);
   TagRasto(Nfe,FK);
   TagISSQN(Nfe,FK);
+  TagObsCont(Nfe,FK);
+  TagObsFisco(Nfe,FK);
+
   {1:n}
   TagDetExport(Nfe,FK);
   TagDI(Nfe,FK);
@@ -800,6 +806,35 @@ begin
     ToTalizaCreditoSimplesNacional(Nfe.NotasFiscais.Items[0].Nfe.Det.Items[FK].imposto.ICMS.vCredICMSSN);
 
   end;
+end;
+
+
+class procedure TImportaXmlParaComponentesVisuaisController.TagObsCont(Nfe:TAcbrNfe;FK:Integer);
+begin
+  if Assigned(Nfe.NotasFiscais.Items[0].Nfe.Det.Items[FK].obsCont) then
+  begin
+    FDataModuleNfe.CDSNfeDetalheObsContribuinte.Append;
+    FDataModuleNfe.CDSNfeDetalheObsContribuinte.FieldByName('ID').AsInteger:=FK;
+    FDataModuleNfe.CDSNfeDetalheObsContribuinte.FieldByName('ID_NFE_DETALHE').AsInteger:=FK;
+    FDataModuleNfe.CDSNfeDetalheObsContribuinte.FieldByName('CAMPO').AsString:=Nfe.NotasFiscais.Items[0].Nfe.Det.Items[FK].obsCont.xCampo;
+    FDataModuleNfe.CDSNfeDetalheObsContribuinte.FieldByName('TEXTO').AsString:= Nfe.NotasFiscais.Items[0].Nfe.Det.Items[FK].obsCont.xTexto;
+    FDataModuleNfe.CDSNfeDetalheObsContribuinte.Post
+  end;
+
+end;
+
+class procedure TImportaXmlParaComponentesVisuaisController.TagObsFisco(Nfe:TAcbrNfe;FK:Integer);
+begin
+  if Assigned(Nfe.NotasFiscais.Items[0].Nfe.Det.Items[FK].obsCont) then
+  begin
+    FDataModuleNfe.CDSNfeDetalheObsFisco.Append;
+    FDataModuleNfe.CDSNfeDetalheObsFisco.FieldByName('ID').AsInteger:=FK;
+    FDataModuleNfe.CDSNfeDetalheObsFisco.FieldByName('ID_NFE_DETALHE').AsInteger:=FK;
+    FDataModuleNfe.CDSNfeDetalheObsFisco.FieldByName('CAMPO').AsString:=Nfe.NotasFiscais.Items[0].Nfe.Det.Items[FK].obsCont.xCampo;
+    FDataModuleNfe.CDSNfeDetalheObsFisco.FieldByName('TEXTO').AsString:= Nfe.NotasFiscais.Items[0].Nfe.Det.Items[FK].obsCont.xTexto;
+    FDataModuleNfe.CDSNfeDetalheObsFisco.Post
+  end;
+
 end;
 
 class procedure TImportaXmlParaComponentesVisuaisController.TagPIS(Nfe: TAcbrNfe; FK: Integer);

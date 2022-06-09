@@ -3865,9 +3865,9 @@
     end
     object GridNotasFiscais: TJvDBUltimGrid
       Left = 2
-      Top = 107
+      Top = 153
       Width = 509
-      Height = 429
+      Height = 383
       Align = alClient
       DataSource = DSNotasFiscais
       PopupMenu = PopupMenu1
@@ -3956,33 +3956,52 @@
     end
     object GroupBoxPesquisa: TGroupBox
       Left = 2
-      Top = 50
+      Top = 89
       Width = 509
-      Height = 57
+      Height = 64
       Align = alTop
       Caption = 'Pesquisa'
       TabOrder = 2
       object LabelPesquisa: TLabel
         Left = 2
-        Top = 42
+        Top = 49
         Width = 505
         Height = 13
         Align = alBottom
         Caption = 
           'Pesquisa pelo "N'#250'mero". Para mudar o campo de pesquisa selecione' +
           ' o campo desejado na grid'
+        ExplicitTop = 42
         ExplicitWidth = 451
       end
       object EditPesquisa: TEdit
         Left = 2
-        Top = 21
+        Top = 28
         Width = 505
         Height = 21
         Align = alBottom
         CharCase = ecUpperCase
         TabOrder = 0
         OnKeyPress = EditPesquisaKeyPress
+        ExplicitTop = 21
       end
+    end
+    object RadioGroupTipoVisualizacao: TRadioGroup
+      Left = 2
+      Top = 50
+      Width = 509
+      Height = 39
+      Align = alTop
+      Caption = ' '
+      Columns = 2
+      ItemIndex = 0
+      Items.Strings = (
+        'Visualizar por Emitente'
+        'Visualizar por Destinat'#225'rio')
+      TabOrder = 3
+      OnClick = RadioGroupTipoVisualizacaoClick
+      ExplicitLeft = 1
+      ExplicitTop = 71
     end
   end
   object MainMenu1: TMainMenu
@@ -4179,8 +4198,8 @@
   end
   object DSNotasFiscais: TDataSource
     DataSet = CdsNotasFiscais
-    Left = 152
-    Top = 488
+    Left = 72
+    Top = 400
   end
   object PopupMenu1: TPopupMenu
     Left = 280
@@ -4190,9 +4209,13 @@
       OnClick = PopupMenu11Click
     end
   end
+  object SaveDialog1: TSaveDialog
+    Left = 232
+    Top = 360
+  end
   object CdsNotasFiscais: TClientDataSet
     PersistDataPacket.Data = {
-      590100009619E0BD01000000180000000A0000000000030000005901064E554D
+      820100009619E0BD01000000180000000B0000000000030000008201064E554D
       45524F010049000000010005574944544802000200090012464F524E45434544
       4F525F434C49454E54450100490000000100055749445448020002003C000553
       4552494501004900000001000557494454480200020003000C444154415F454D
@@ -4202,13 +4225,15 @@
       49000000010005574944544802000200E8031343414D494E484F5F4152515549
       564F5F504446020049000000010005574944544802000200E8030B5354415455
       535F4E4F544101004900000001000557494454480200020002000C4348415645
-      5F41434553534F01004900000001000557494454480200020032000000}
+      5F41434553534F0100490000000100055749445448020002003200144944454E
+      544946494341444F525F46494C54524F01004900000001000557494454480200
+      020001000000}
     Active = True
     Aggregates = <>
     Params = <>
     AfterScroll = CdsNotasFiscaisAfterScroll
     Left = 72
-    Top = 336
+    Top = 272
     object CdsNotasFiscaisNUMERO: TStringField
       DisplayLabel = 'N'#186' NF-e'
       FieldName = 'NUMERO'
@@ -4216,7 +4241,7 @@
     end
     object CdsNotasFiscaisFORNECEDOR_CLIENTE: TStringField
       Tag = 1
-      DisplayLabel = 'Fornecedor/Cliente'
+      DisplayLabel = 'Emitente/Destinat'#225'rio'
       DisplayWidth = 37
       FieldName = 'FORNECEDOR_CLIENTE'
       Size = 60
@@ -4260,9 +4285,11 @@
       Visible = False
       Size = 50
     end
-  end
-  object SaveDialog1: TSaveDialog
-    Left = 232
-    Top = 360
+    object CdsNotasFiscaisIDENTIFICADOR_FILTRO: TStringField
+      DisplayLabel = 'Identif. Filtro'
+      FieldName = 'IDENTIFICADOR_FILTRO'
+      Visible = False
+      Size = 1
+    end
   end
 end

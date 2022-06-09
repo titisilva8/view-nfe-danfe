@@ -6,20 +6,25 @@ uses
   Winapi.Windows, Winapi.Messages, Winapi.ShellAPI,
   System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ExtCtrls,
-  Vcl.Clipbrd, Vcl.StdCtrls,
-   Vcl.ComCtrls,Vcl.FileCtrl, ACBrDFeReport, ACBrDFeDANFeReport,
+  Vcl.Clipbrd, Vcl.StdCtrls,Vcl.ComCtrls,Vcl.FileCtrl, ACBrDFeReport, ACBrDFeDANFeReport,
   ACBrNFeDANFEClass, ACBrNFeDANFeRLClass, ACBrBase, ACBrDFe, ACBrNFe, Data.DB,
   Vcl.Grids, Vcl.DBGrids, JvExDBGrids, JvDBGrid, JvDBUltimGrid,
-  Datasnap.DBClient, Vcl.Buttons,Biblioteca,pcnConversao,JvSpecialProgress,UDataModuleNFe,
+  Datasnap.DBClient, Vcl.Buttons,Biblioteca,JvSpecialProgress,UDataModuleNFe,
   UDataModuleItensDetalhados,ImportaXmlParaComponentesVisuaisController,PDFium.Frame,StrUtils,JvDBGridExport;
+
+   type
+     TTipoVisualizacaoEmitenteDestinatario = (destNfe, emitNfe);
+
+
+
 
   type
     TXmlPdfController = class
     private
 
     public
-      class procedure CarregarArquivosXml(CdsNotasFiscais:TClientDataSet;GeraDanfe:boolean;ProgressBar:TJvSpecialProgress);
-      class procedure CarregarArquivosXmlPastaSelecionada(CdsNotasFiscais:TClientDataSet;GeraDanfe:boolean;ProgressBar:TJvSpecialProgress);
+      class procedure CarregarArquivosXml(CdsNotasFiscais:TClientDataSet;GeraDanfe:boolean;ProgressBar:TJvSpecialProgress;TipoVisualizacao:TTipoVisualizacaoEmitenteDestinatario);
+      class procedure CarregarArquivosXmlPastaSelecionada(CdsNotasFiscais:TClientDataSet;GeraDanfe:boolean;ProgressBar:TJvSpecialProgress;TipoVisualizacao:TTipoVisualizacaoEmitenteDestinatario);
       class function ConverteArquivoXmlToPdf(ArquivoXml:String;AcbrNfe:TAcbrNfe):String;
       class function GetArquivoDanfe(CdsNotasFiscais:TClientDataSet):String;
       class function GetQuantidadeArquivosPasta(Pasta, Nome:string):integer;
@@ -36,13 +41,15 @@ uses
       class procedure LoadFile(const AFileName: string;pnPages:TPanel;PDFium: TPDFiumFrame);
       class procedure ConfiguraSelecaoTodosItens(ColunaGrid:Integer;ProgressBar:TJvSpecialProgress);
       class procedure FiltraNotasFiscaisRefFiltroItens(CdsNotasFiscais:TClientDataSet);
+      class procedure LimparIdentificadorFiltro(CdsNotasFiscais:TClientDataSet);
       class procedure ExportaItensParaExcel(Grid:TJvDBUltimGrid);
       class procedure SelecionaItemNaGrid(ColunaGrid:Integer);
+      class function GetEmitenteNfe(Nfe:TAcbrNfe):String;
     end;
 
 implementation
 
-uses UConverteXml;
+uses UConverteXml, pcnConversao;
 
 Const
 SELDIRHELP = 1000;
@@ -183,7 +190,7 @@ begin
    Result:=Contador;
 end;
 
-class procedure TXmlPdfController.CarregarArquivosXmlPastaSelecionada(CdsNotasFiscais:TClientDataSet;GeraDanfe:boolean;ProgressBar:TJvSpecialProgress);
+class procedure TXmlPdfController.CarregarArquivosXmlPastaSelecionada(CdsNotasFiscais:TClientDataSet;GeraDanfe:boolean;ProgressBar:TJvSpecialProgress;TipoVisualizacao:TTipoVisualizacaoEmitenteDestinatario);
 var I,I2,QuantidadeArquivosPasta:Integer;
 AcbrNfe:TACBrNFe;
 AcbrDanfe:TACBrNFeDANFeRL;
@@ -226,7 +233,12 @@ begin
         CdsNotasFiscais.FieldByName('SERIE').AsString:= IntToStr(AcbrNfe.NotasFiscais.Items[0].NFe.Ide.serie);
         CdsNotasFiscais.FieldByName('DATA_EMISSAO').AsDateTime:= AcbrNfe.NotasFiscais.Items[0].NFe.Ide.dEmi;
         CdsNotasFiscais.FieldByName('DATA_SAIDA_ENTRADA').AsDateTime:= AcbrNfe.NotasFiscais.Items[0].NFe.Ide.dSaiEnt;
+
+        if TipoVisualizacao = destNfe then
+        CdsNotasFiscais.FieldByName('FORNECEDOR_CLIENTE').AsString:= upperCase(AcbrNfe.NotasFiscais.Items[0].NFe.Dest.xNome)
+        else
         CdsNotasFiscais.FieldByName('FORNECEDOR_CLIENTE').AsString:= upperCase(AcbrNfe.NotasFiscais.Items[0].NFe.Emit.xNome);
+
         CdsNotasFiscais.FieldByName('VALOR').AsCurrency:= AcbrNfe.NotasFiscais.Items[0].NFe.Total.ICMSTot.vNF;
         CdsNotasFiscais.FieldByName('CAMINHO_ARQUIVO_XML').AsString:= Arquivo;
         CdsNotasFiscais.FieldByName('CHAVE_ACESSO').AsString:=AcbrNfe.NotasFiscais.Items[0].NFe.procNFe.chNFe;
@@ -242,6 +254,26 @@ begin
     FreeandNil(AcbrDanfe);
     ProgressBar.Visible:=False;
   end;
+end;
+
+class function TXmlPdfController.GetEmitenteNfe(Nfe:TAcbrNfe):String;
+begin
+ {if TImportaXmlParaComponentesVisuaisController.GetTipoOperacao(Nfe.NotasFiscais.Items[0].NFe.Ide.tpNF) = 0 then
+ begin
+   //if pcnConversao.TpEmisToStr(Nfe.NotasFiscais.Items[0].NFe.) = '0' then
+   //Result:=Nfe.NotasFiscais.Items[0].NFe.Emit.xNome
+   //else
+   Result:=Nfe.NotasFiscais.Items[0].NFe.Dest.xNome
+ end;
+
+ if TImportaXmlParaComponentesVisuaisController.GetTipoOperacao(Nfe.NotasFiscais.Items[0].NFe.Ide.tpNF) = 1 then
+ begin
+   if pcnConversao.TpEmisToStr(Nfe.NotasFiscais.Items[0].NFe.Ide.tpEmis) = '0' then
+   Result:=Nfe.NotasFiscais.Items[0].NFe.Dest.xNome
+   else
+   Nfe.NotasFiscais.Items[0].NFe.Emit.xNome
+ end; }
+  Result:=Nfe.NotasFiscais.Items[0].NFe.Emit.xNome;
 end;
 
 class procedure TXmlPdfController.PesquisaPadrao(Cds: TClientDataSet;Grid: TJvDBUltimGrid;Pesquisa:String;pnPages:TPanel;PDFium: TPDFiumFrame);
@@ -410,7 +442,7 @@ begin
 
 end;
 
-class procedure TXmlPdfController.CarregarArquivosXml(CdsNotasFiscais:TClientDataSet;GeraDanfe:boolean;ProgressBar:TJvSpecialProgress);
+class procedure TXmlPdfController.CarregarArquivosXml(CdsNotasFiscais:TClientDataSet;GeraDanfe:boolean;ProgressBar:TJvSpecialProgress;TipoVisualizacao:TTipoVisualizacaoEmitenteDestinatario);
 var I:Integer;
 OpenDialog:TOpenDialog;
 AcbrNfe:TACBrNFe;
@@ -448,7 +480,14 @@ begin
         CdsNotasFiscais.FieldByName('SERIE').AsString:= IntToStr(AcbrNfe.NotasFiscais.Items[0].NFe.Ide.serie);
         CdsNotasFiscais.FieldByName('DATA_EMISSAO').AsDateTime:= AcbrNfe.NotasFiscais.Items[0].NFe.Ide.dEmi;
         CdsNotasFiscais.FieldByName('DATA_SAIDA_ENTRADA').AsDateTime:= AcbrNfe.NotasFiscais.Items[0].NFe.Ide.dSaiEnt;
+
+        if TipoVisualizacao = destNfe then
+        CdsNotasFiscais.FieldByName('FORNECEDOR_CLIENTE').AsString:= upperCase(AcbrNfe.NotasFiscais.Items[0].NFe.Dest.xNome)
+        else
         CdsNotasFiscais.FieldByName('FORNECEDOR_CLIENTE').AsString:= upperCase(AcbrNfe.NotasFiscais.Items[0].NFe.Emit.xNome);
+
+
+
         CdsNotasFiscais.FieldByName('VALOR').AsCurrency:= AcbrNfe.NotasFiscais.Items[0].NFe.Total.ICMSTot.vNF;
         CdsNotasFiscais.FieldByName('CAMINHO_ARQUIVO_XML').AsString:= OpenDialog.Files[I];
         CdsNotasFiscais.FieldByName('CHAVE_ACESSO').AsString:=AcbrNfe.NotasFiscais.Items[0].NFe.procNFe.chNFe;
@@ -539,11 +578,30 @@ begin
 end;
 
 
+class procedure TXmlPdfController.LimparIdentificadorFiltro(CdsNotasFiscais:TClientDataSet);
+var i:integer;
+begin
+  CdsNotasFiscais.Filter:='IDENTIFICADOR_FILTRO = '+QuotedStr('S');
+  CdsNotasFiscais.Filtered:=true;
+  CdsNotasFiscais.First;
+  //CdsNotasFiscais.DisableControls;
+  for I := 0 to CdsNotasFiscais.RecordCount -1 do
+  begin
+    CdsNotasFiscais.Edit;
+    CdsNotasFiscais.FieldByName('IDENTIFICADOR_FILTRO').AsString:='';
+    CdsNotasFiscais.Post;
+    CdsNotasFiscais.Next;
+  end;
+  //CdsNotasFiscais.EnableControls;
+  CdsNotasFiscais.Filter:='';
+  CdsNotasFiscais.Filtered:=false;
+end;
+
 class procedure TXmlPdfController.FiltraNotasFiscaisRefFiltroItens(CdsNotasFiscais:TClientDataSet);
 var Filtro:String;
 I:Integer;
 begin
-  DataModuleItensDetalhados.CdsDetalheItemFiltro.First;
+  {DataModuleItensDetalhados.CdsDetalheItemFiltro.First;
   FConverteXml.CdsNotasFiscais.Filtered:=false;
   for I := 0  to DataModuleItensDetalhados.CdsDetalheItemFiltro.RecordCount - 1 do
   begin
@@ -558,7 +616,36 @@ begin
   end;
 
   CdsNotasFiscais.Filter:=Filtro;
+  CdsNotasFiscais.Filtered:=true;}
+
+
+
+
+
+  LimparIdentificadorFiltro(CdsNotasFiscais);
+
+  CdsNotasFiscais.DisableControls;
+
+  DataModuleItensDetalhados.CdsDetalheItemFiltro.First;
+  FConverteXml.CdsNotasFiscais.Filtered:=false;
+  for I := 0  to DataModuleItensDetalhados.CdsDetalheItemFiltro.RecordCount - 1 do
+  begin
+    if DataModuleItensDetalhados.CdsDetalheItemFiltro.FieldByName('SELECAO').AsString = 'S' then
+    begin
+      if CdsNotasFiscais.Locate('CHAVE_ACESSO',DataModuleItensDetalhados.CdsDetalheItemFiltro.FieldByName('CHAVE_ACESSO').AsString,[]) then
+      begin
+        CdsNotasFiscais.Edit;
+        CdsNotasFiscais.FieldByName('IDENTIFICADOR_FILTRO').AsString:='S';
+        CdsNotasFiscais.Post;
+      end;
+    end;
+    DataModuleItensDetalhados.CdsDetalheItemFiltro.Next;
+  end;
+
+  CdsNotasFiscais.Filter:='IDENTIFICADOR_FILTRO = '+QuotedStr('S');
   CdsNotasFiscais.Filtered:=true;
+  CdsNotasFiscais.EnableControls;
+  CdsNotasFiscais.First;
 end;
 
 class procedure TXmlPdfController.ExportaItensParaExcel(Grid:TJvDBUltimGrid);

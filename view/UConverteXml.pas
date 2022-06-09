@@ -342,6 +342,8 @@ type
     MMenutipoCarregamentoArquivos: TMenuItem;
     PesquisaAvanada1: TMenuItem;
     ItensDetalhados1: TMenuItem;
+    SaveDialog1: TSaveDialog;
+    RadioGroupTipoVisualizacao: TRadioGroup;
     CdsNotasFiscais: TClientDataSet;
     CdsNotasFiscaisNUMERO: TStringField;
     CdsNotasFiscaisFORNECEDOR_CLIENTE: TStringField;
@@ -353,7 +355,7 @@ type
     CdsNotasFiscaisCAMINHO_ARQUIVO_PDF: TStringField;
     CdsNotasFiscaisSTATUS_NOTA: TStringField;
     CdsNotasFiscaisCHAVE_ACESSO: TStringField;
-    SaveDialog1: TSaveDialog;
+    CdsNotasFiscaisIDENTIFICADOR_FILTRO: TStringField;
     procedure Open1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -394,6 +396,8 @@ type
     procedure GridItensDblClick(Sender: TObject);
     procedure MMenutipoCarregamentoArquivosClick(Sender: TObject);
     procedure ItensDetalhados1Click(Sender: TObject);
+    procedure RadioGroupTipoVisualizacaoClick(Sender: TObject);
+
   private
     { Déclarations privées }
     FButtons  : TBitmap;
@@ -414,6 +418,7 @@ type
     procedure ConfiguraRadioButtons;
 
   public
+    TipoVisualizacao:TTipoVisualizacaoEmitenteDestinatario;
     { Déclarations publiques }
 
   end;
@@ -707,6 +712,10 @@ begin
 
   // Procedure que permite usuario configurar o windows para abrir arquivos xml pelo sistema
   AbreArquivoPeloWindows;
+
+  RadioGroupTipoVisualizacao.ItemIndex:=0;
+  TipoVisualizacao:=emitNfe;
+
 end;
 
 procedure TFConverteXml.AbreArquivoPeloWindows;
@@ -963,9 +972,9 @@ begin
   CdsNotasFiscais.Filtered:=false;
   ConfiguraEstadoTela(true);
   if not (MMenutipoCarregamentoArquivos.Checked) then
-  TXmlPdfController.CarregarArquivosXmlPastaSelecionada(CdsNotasFiscais,False,JvSpecialProgressNotasFiscais)
+  TXmlPdfController.CarregarArquivosXmlPastaSelecionada(CdsNotasFiscais,False,JvSpecialProgressNotasFiscais,TipoVisualizacao)
   else
-  TXmlPdfController.CarregarArquivosXml(CdsNotasFiscais,False,JvSpecialProgressNotasFiscais);
+  TXmlPdfController.CarregarArquivosXml(CdsNotasFiscais,False,JvSpecialProgressNotasFiscais,TipoVisualizacao);
   TImportaXmlParaComponentesVisuaisController.TotalizaNotasFiscais(CdsNotasFiscais,PanelTotalizadorNf);
 end;
 
@@ -974,6 +983,14 @@ begin
   ConfiguraEstadoTela(False);
 end;
 
+
+procedure TFConverteXml.RadioGroupTipoVisualizacaoClick(Sender: TObject);
+begin
+  if RadioGroupTipoVisualizacao.ItemIndex = 1 then
+  TipoVisualizacao:=destNfe
+  else
+  TipoVisualizacao:=emitNfe;
+end;
 
 {$EndRegion}
 

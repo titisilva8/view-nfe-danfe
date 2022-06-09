@@ -189,6 +189,8 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="model\NfeDetalheObsContribuinteVO.pas"/>
+        <DCCReference Include="model\NfeDetalheObsFiscoVO.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
